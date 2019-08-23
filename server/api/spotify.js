@@ -1,16 +1,31 @@
+const ENDPOINTS = require('../service/constants.js')
 const axios = require('axios')
 const querystring = require('querystring')
-
 
 let redirect_uri = 
     process.env.REDIRECT_URI || 
         'http://localhost:' + process.env.EXPRESS_PORT + '/callback'
 
+let access_token = null
+
 module.exports = (app) => {
-    
+    app.get('/userProfile', function(req,res) {
+        axios({
+            method: 'GET',
+            url: ENDPOINTS.spotify_get_user,
+            headers: {
+                'Authorization': 'Bearer ' + access_token
+            }
+        }).then(response => {
+            console.log(response)
+            res.send(response.data)
+        }).catch(error => {
+            console.log(error)
+        })
+
+    })
     app.get('/login', function(req, res) {
-        console.log(process.env)
-        res.redirect('https://accounts.spotify.com/authorize?' +
+        res.redirect(ENDPOINTS.spotify_auth +
             querystring.stringify({ 
                 response_type: 'code',
                 client_id: process.env.SPOTIFY_CLIENT_ID,
@@ -21,23 +36,9 @@ module.exports = (app) => {
 
     app.get('/callback', function(req, res) {
         let code = req.query.code || null
-        let authOptions = {
-            'url': 'https://accounts.spotify.com/api/token',
-            'form': {
-                code: code,
-                redirect_uri,
-                grant_type: 'authorization_code'
-            },
-            'headers': {
-                'Authorization': 'Basic ' + (new Buffer(
-                    process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET
-                ).toString('base64'))
-            }
-        }
-
         axios({
             method: 'POST',
-            url: authOptions.url,
+            url: ENDPOINTS.spotify_token,
             headers: {
                 'Authorization': 'Basic ' + (new Buffer(
                     process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET
@@ -51,7 +52,7 @@ module.exports = (app) => {
             },
             timeout: 1000
         }).then(response =>{
-            console.log(response)
+            access_token = response.data.access_token
             res.redirect('http://localhost:3000?access_token=' + response.data.access_token)
         }).catch(error => {
             console.log(error)
