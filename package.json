@@ -37,5 +37,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "express-session": "^1.16.2",
+    "js-cookie": "^2.2.1"
   }
 }

@@ -4,53 +4,56 @@ import Player from  './components/Player'
 import LoginButton from './components/LoginButton'
 import qString from 'querystring'
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false)
   const [token, setToken] = useState(null)
   const [userProfile, setUserProfile] = useState(JSON)
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search)
-    let codeParam = urlParams.get('access_token')
-    codeParam !== null ? setLoggedIn(true) : setLoggedIn(false)
-    if (loggedIn && token === null)
+  function HeaderRender() {
+    if (Cookies.get('access_token'))
     {
-      setToken(qString.parse(window.location.search))
-      let userPromise = axios({
+      axios({
         method: 'GET',
-        url: 'http://localhost:3001/userProfile',
+        url: 'http://localhost:3001/userProfile?access_token=' + Cookies.get('access_token'),
       }).then(res => {
         setUserProfile(res.data)
+      }).catch(error => {
+        console.log(error)
       })
+      return (
+        <div>
+          <div className='loginNotice'>
+            Logged in as: {userProfile.display_name}
+          </div>
+        </div>
+      )
     }
-  },[loggedIn, token])
+    else
+      return null
+  }
+
+  useEffect(() => {
+    console.log("Cookie:" + Cookies.get('access_token'))
+    //if (Cookies.get('token'))
+  }, [])
 
   return (
     <div className='App'>
       <header className='App-header'>
-        {!loggedIn 
-          ? (<div className="title">
-              <img src={ require('./content/images/dnd_logo.png')} className='dndLogo' alt="DND Logo"/>
-                <div className="title-text">Playlist Dashboard</div>
-              </div>)
-          : (<div>
-              <div className="title">
-              <img src={ require('./content/images/dnd_logo.png')} className='dndLogo' alt="DND Logo"/>
-                <div className="title-text">Playlist Dashboard</div>
-              </div>
-                <div className='loginNotice'>
-                  Logged in as: {userProfile.display_name}
-                </div>
-              </div>
-            ) 
-        }
+        <div className="title">
+          <img src={ require('./content/images/dnd_logo.png')} className='dndLogo' alt="DND Logo"/>
+          <div className="title-text">Playlist Dashboard</div>
+        </div>
+        <HeaderRender/>
       </header>
       <body className='App-body'>
-      {!loggedIn 
+      {!Cookies.get('access_token')
         ? <LoginButton/>
-        : <Player/>
+        : <Player
+            access_token={Cookies.get('access_token')}
+          />
       }
       </body>
       <footer className='App-footer'>

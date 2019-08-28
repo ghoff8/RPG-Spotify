@@ -6,24 +6,22 @@ let redirect_uri =
     process.env.REDIRECT_URI || 
         'http://localhost:' + process.env.EXPRESS_PORT + '/callback'
 
-let access_token = null
-
 module.exports = (app) => {
     app.get('/userProfile', function(req,res) {
         axios({
             method: 'GET',
             url: ENDPOINTS.spotify_get_user,
             headers: {
-                'Authorization': 'Bearer ' + access_token
+                'Authorization': 'Bearer ' + req.query.access_token
             }
         }).then(response => {
-            console.log(response)
             res.send(response.data)
         }).catch(error => {
             console.log(error)
         })
 
     })
+
     app.get('/login', function(req, res) {
         res.redirect(ENDPOINTS.spotify_auth +
             querystring.stringify({ 
@@ -50,10 +48,11 @@ module.exports = (app) => {
                 code: code,
                 redirect_uri: redirect_uri,
             },
-            timeout: 1000
+            timeout: 5000
         }).then(response =>{
-            access_token = response.data.access_token
-            res.redirect('http://localhost:3000?access_token=' + response.data.access_token)
+            res.cookie('access_token', response.data.access_token, {maxAge: 36000})
+            res.cookie('refresh_token', response.data.refresh_token)
+            res.redirect(302, 'http://localhost:3000')
         }).catch(error => {
             console.log(error)
         })
