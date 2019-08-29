@@ -21,13 +21,27 @@ module.exports = (app) => {
         })
 
     })
+    app.get('/player', function(req,res) {
+        axios({
+            method: 'GET',
+            url: ENDPOINTS.spotify_get_player,
+            headers: {
+                'Authorization': 'Bearer ' + req.query.access_token
+            }
+        }).then(response => {
+            console.log(response.data)
+            res.send(response.data)
+        }).catch(err => {
+            console.log(err)
+        })
+    })
 
     app.get('/login', function(req, res) {
         res.redirect(ENDPOINTS.spotify_auth +
             querystring.stringify({ 
                 response_type: 'code',
                 client_id: process.env.SPOTIFY_CLIENT_ID,
-                scope: 'user-read-private user-read-email',
+                scope: 'user-read-private user-read-email user-modify-playback-state user-read-currently-playing user-read-playback-state user-library-read',
                 redirect_uri
             }))
     })
@@ -50,7 +64,7 @@ module.exports = (app) => {
             },
             timeout: 5000
         }).then(response =>{
-            res.cookie('access_token', response.data.access_token, {maxAge: 36000})
+            res.cookie('access_token', response.data.access_token, {maxAge: 3600000})
             res.cookie('refresh_token', response.data.refresh_token)
             res.redirect(302, 'http://localhost:3000')
         }).catch(error => {

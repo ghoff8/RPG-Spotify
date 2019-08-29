@@ -1,27 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Player from  './components/Player'
 import LoginButton from './components/LoginButton'
-import qString from 'querystring'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
 
 function App() {
-  const [token, setToken] = useState(null)
   const [userProfile, setUserProfile] = useState(JSON)
 
   function HeaderRender() {
     if (Cookies.get('access_token'))
     {
-      axios({
-        method: 'GET',
-        url: 'http://localhost:3001/userProfile?access_token=' + Cookies.get('access_token'),
-      }).then(res => {
-        setUserProfile(res.data)
-      }).catch(error => {
-        console.log(error)
-      })
+      if (userProfile === JSON)
+      {
+        axios({
+          method: 'GET',
+          url: 'http://localhost:3001/userProfile?access_token=' + Cookies.get('access_token'),
+        }).then(res => {
+          setUserProfile(res.data)
+        }).catch(error => {
+          console.log(error)
+        })
+      }
       return (
         <div>
           <div className='loginNotice'>
@@ -33,11 +34,6 @@ function App() {
     else
       return null
   }
-
-  useEffect(() => {
-    console.log("Cookie:" + Cookies.get('access_token'))
-    //if (Cookies.get('token'))
-  }, [])
 
   return (
     <div className='App'>

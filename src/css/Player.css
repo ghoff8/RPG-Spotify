@@ -1,0 +1,17 @@
+
+.basePlayer { 
+    position: relative;
+    text-align-last: center;
+    height: 35%;
+    padding: 15px;
+}
+
+img.albumImage { 
+    height: 225px;
+    border: 5px solid black;
+}
+
+.songInfo {
+    padding: 10px;
+    
+}

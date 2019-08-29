@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "express-session": "^1.16.2",
-    "js-cookie": "^2.2.1"
+    "js-cookie": "^2.2.1",
+    "prop-types": "^15.7.2"
   }
 }
