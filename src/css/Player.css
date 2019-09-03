@@ -3,8 +3,7 @@
     position: relative;
     text-align-last: center;
     height: 35%;
-    padding: 15px;
-    padding-top: 30px;
+    padding-top: 1px;
 }
 
 img.albumImage { 
@@ -20,11 +19,15 @@ img.albumImage {
 
 .nextSongButton {
     position: absolute;
-    top: 40%;
-    right: 25%;
+    top: 30%;
+    right: 23%;
     background-color: rgba(0,0,0,0);
     border: none;
     background: transparent;
+}
+
+.nextSongButton:disabled {
+   color: rgba(0,0,0,0);
 }
 .nextSongButton:active { 
     outline: none;
@@ -42,8 +45,8 @@ img.nextSongButton {
     border-color: rgba(0,0,0,0.2);
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius:50;
 }
 

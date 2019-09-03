@@ -5,6 +5,7 @@ let redirect_uri =
     process.env.REDIRECT_URI || 
         'http://localhost:' + process.env.EXPRESS_PORT + '/callback'
 
+
 module.exports = (app) => {
    
     app.post('/apiRefresh', function(req,res) {
@@ -22,12 +23,29 @@ module.exports = (app) => {
                 refresh_token: req.query.refresh_token
             }
         }).then(response => {
+            console.log(new Date() + ': Requested Spotify token refresh - Status: ' + response.status)
             res.send(response.data)
         }).catch(err => {
             console.log(err)
         })
     })
 
+    app.post('/nextSong', function(req,res) {
+        axios({
+            method: 'POST',
+            url: ENDPOINTS.spotify_next_song,
+            headers: {
+                'Authorization': 'Bearer ' + req.cookies.access_token
+            }
+        }).then(response => {
+            console.log(new Date() + ': Requested Next Song - Status: ' + response.status)
+            res.header('Access-Control-Allow-Credentials', true)
+            res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+            res.sendStatus(response.status)
+        }).catch(err => {
+            console.log(err)
+        })
+    })
     app.get('/userProfile', function(req,res) {
         axios({
             method: 'GET',
@@ -36,6 +54,7 @@ module.exports = (app) => {
                 'Authorization': 'Bearer ' + req.cookies.access_token
             }
         }).then(response => {
+            console.log(new Date() + ': Requested User Profile - Status: ' + response.status)
             res.header('Access-Control-Allow-Credentials', true)
             res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
             res.send(response.data)
@@ -52,6 +71,7 @@ module.exports = (app) => {
                 'Authorization': 'Bearer ' + req.cookies.access_token
             }
         }).then(response => {
+            console.log(new Date() + ': Requested Spotify Player Info - Status: ' + response.status)
             res.header('Access-Control-Allow-Credentials', true)
             res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
             res.send(response.data)
@@ -76,7 +96,7 @@ module.exports = (app) => {
             method: 'POST',
             url: ENDPOINTS.spotify_token,
             headers: {
-                'Authorization': 'Basic ' + (new Buffer(
+                'Authorization': 'Basic ' + (new Buffer.from(
                     process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET
                     ).toString('base64')),
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -88,7 +108,18 @@ module.exports = (app) => {
             },
             timeout: 5000
         }).then(response =>{
-            /*axios({
+            console.log(new Date() + ': Requested Spotify Access Tokens - Status: ' + response.status)
+            res.cookie('access_token', response.data.access_token, {maxAge: 3600000, signed: false})
+            res.cookie('refresh_token', response.data.refresh_token)
+            res.redirect(302, 'http://localhost:3000')
+        }).catch(error => {
+            console.log(error)
+        })
+    })
+}
+ 
+//refresh logic
+ /*axios({
                 method: 'POST',
                 url: 'http://localhost:3001/apiRefresh?refresh_token=' + response.data.refresh_token
             }).then(secRes => {
@@ -98,11 +129,3 @@ module.exports = (app) => {
             }).catch(err => {
                 console.log(err.data)
             })*/
-            res.cookie('access_token', response.data.access_token, {maxAge: 3600000, signed: false})
-            res.cookie('refresh_token', response.data.refresh_token)
-            res.redirect(302, 'http://localhost:3000')
-        }).catch(error => {
-            console.log(error)
-        })
-    })
-}

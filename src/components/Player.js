@@ -1,8 +1,9 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import Proptypes from 'prop-types'
+import Slider from 'rc-slider'
 import axios from 'axios'
+import 'rc-slider/assets/index.css';
 import '../css/Player.css'
-
 
 axios.defaults.withCredentials = true
 
@@ -11,14 +12,24 @@ Player.propTypes = {
 }
 
 function Player(props) {
-    const [token, setToken] = useState(props.access_token || null)
     const [isWorking, setIsWorking] = useState(false)
     const [player, setPlayer] = useState(null)
+    const nextSongRef = useRef(null)
 
+    const nextSong = () => {
+        nextSongRef.current.disabled = true
+        axios({
+            method: 'POST',
+            url: 'http://localhost:3001/nextSong'
+        }).then(res => {
+            nextSongRef.current.disabled = false
+        }).catch(err => {
+            console.log(err)
+        })
+    }
     useEffect(() => {
         if (player === null)
         {
-            setToken(props.access_token)
             axios({
                 method: 'GET',
                 url: 'http://localhost:3001/player'
@@ -26,7 +37,7 @@ function Player(props) {
                 setPlayer(res.data)
             })
         }
-    }, [player, props.access_token, token])
+    }, [player])
 
     useEffect(() => {
         const tempPoll = setInterval(() => {
@@ -51,13 +62,15 @@ function Player(props) {
     function ActivePlayer() {
         return(
             <div>
-                <div className='imageAndWidgets'>
+                <div className='imageAndWidgets' style={{backgroundColor: 'rgba(0,0,0,0.2)', padding: '2%'}}>
                     <img className='albumImage' src={player.item.album.images[1].url} alt='Album Cover'/>
-                    <button className = 'nextSongButton' onClick={() => {console.log('button click')}}>
+                    <button className = 'nextSongButton' onClick={() => nextSong()} ref={nextSongRef}>
                         <img src={require('../content/images/skip.png')} className='nextSongButton' alt='arrow'></img>
                     </button>
+                    <Slider min={0} max={100} vertical={true}/>
+                    <h3 className = 'songInfo'>{player.item.artists[0].name} - {player.item.name} </h3>
                 </div>
-                <h3 className = 'songInfo'>{player.item.artists[0].name} - {player.item.name} </h3>
+                
             </div>
         )
     }
