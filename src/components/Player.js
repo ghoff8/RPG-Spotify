@@ -49,7 +49,7 @@ function Player(props) {
                 method: 'GET',
                 url: 'http://localhost:3001/player'
             }).then(res => {
-                console.log(res.data)
+                console.log("Data" + res.data)
                 setPlayer(res.data)
             }).catch(err => {
                 console.log(err)
