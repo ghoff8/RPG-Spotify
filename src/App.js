@@ -39,7 +39,7 @@ function App() {
     <div className='App'>
       <header className='App-header'>
         <div className="title">
-          <img src={ require('./content/images/dnd_logo.png')} className='dndLogo' alt="DND Logo"/>
+          <img src={require('./content/images/dnd_logo.png')} className='dndLogo' alt="DND Logo"/>
           <div className="title-text">Playlist Dashboard</div>
         </div>
         <HeaderRender/>

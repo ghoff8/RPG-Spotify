@@ -3,7 +3,7 @@
     position: relative;
     text-align-last: center;
     height: 35%;
-    padding-top: 1px;
+    padding-top: 0px;
 }
 
 img.albumImage { 
@@ -14,7 +14,9 @@ img.albumImage {
 }
 
 .songInfo {
+    font-size: 32px;
     padding: 10px;
+    color: black;
 }
 
 .nextSongButton {
@@ -52,9 +54,22 @@ img.nextSongButton {
 
 .imageAndWidgets{
     min-width: 650px;
+    background-color: rgba(0,0,0,0.2);
+    padding: 2%;
     text-align: center;
     position: relative;
     width: 50%;
     left: 25vw;
     right: 75vw;
+    border: 10px solid #282c34;
+    border-top: none;
+}
+
+.volumeSlider {
+    background-color: rgba(0,0,0,0.5);
+    position: absolute;
+    left: 23%;
+    top: 12%;
+    height: 200px;
+    width: 15px; 
 }
