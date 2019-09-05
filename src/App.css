@@ -30,6 +30,7 @@
 .App-body {
   height: 90vh;
   background-color: #a84832;
+  background-image: url('./content/images/parchment.jpg')
 }
 .loginNotice {
   background-color: #1DB954;
