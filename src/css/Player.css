@@ -9,8 +9,10 @@
 img.albumImage { 
     height: 225px;
     position: relative;
-    border: 5px solid black;
     display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    border: 5px solid black;
 }
 
 .songInfo {
@@ -22,7 +24,8 @@ img.albumImage {
 .nextSongButton {
     position: absolute;
     top: 30%;
-    right: 23%;
+    margin-inline-start: 8px;
+    display: inline-block;
     background-color: rgba(0,0,0,0);
     border: none;
     background: transparent;
@@ -44,12 +47,8 @@ img.albumImage {
 }
 
 img.nextSongButton {
-    border-color: rgba(0,0,0,0.2);
-    align-items: center;
-    justify-content: center;
     width: 50px;
     height: 50px;
-    border-radius:50;
 }
 
 .imageAndWidgets{
@@ -62,8 +61,12 @@ img.nextSongButton {
     height: 35%;
     left: 25vw;
     right: 75vw;
-    border: 10px solid #282c34;
+    border: 5px solid #282c34; 
+    border-radius: 150px;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
     border-top: none;
+    box-shadow: 1px 5px 10px rgba(0,0,0,.5);
 }
 
 .volumeSlider {
@@ -76,4 +79,23 @@ img.nextSongButton {
     top: 12%;
     height: 200px;
     width: 15px; 
+}
+
+img.volumeIcon {
+    height: 30px;
+    right: 100%;
+    top: 45%;
+    position: relative;
+}
+
+.sliderAndIcon {
+    float: left;
+    left: 25%;
+    position: relative;
+    height: 250px;
+    margin-top: -15px;
+}
+
+.noPlayer {
+    padding: 1%;
 }

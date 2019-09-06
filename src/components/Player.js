@@ -42,10 +42,7 @@ function Player(props) {
                 if (res.data.currently_playing_type === 'episode')
                     setPlayer('')
                 else
-                {
-                    console.log(res.data)
                     setPlayer(res.data)
-                }
             }).catch(err => {
                 console.log(err)
             })
@@ -62,7 +59,7 @@ function Player(props) {
             { 
               player !== ''
                 ? <ActivePlayer player={player}/>
-                : <h1>No Player Active</h1>
+                : <div className='noPlayer'><h1>No Player Active</h1></div>
             } 
         </div>
     )

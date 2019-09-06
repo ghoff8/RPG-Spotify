@@ -9,9 +9,7 @@ app.use(cors())
 app.use(cookieParser())
 app.use(express.json())
 
-
 require('./api/spotify')(app)
-
 
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));

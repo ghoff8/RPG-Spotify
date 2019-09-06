@@ -1,10 +1,10 @@
 const ENDPOINTS = require('../service/constants.js')
 const axios = require('axios')
 const querystring = require('querystring')
+var cors = require('cors')
 let redirect_uri = 
     process.env.REDIRECT_URI || 
         'http://localhost:' + process.env.EXPRESS_PORT + '/callback'
-
 
 module.exports = (app) => {
    
@@ -30,7 +30,7 @@ module.exports = (app) => {
         })
     })
 
-    app.post('/nextSong', function(req,res) {
+    app.post('/nextSong', function(req,res,next) {
         axios({
             method: 'POST',
             url: ENDPOINTS.spotify_next_song,
@@ -46,6 +46,26 @@ module.exports = (app) => {
             console.log(err)
         })
     })
+    app.post('/setVolume', function(req,res) {
+        axios({
+            method: 'PUT',
+            url: ENDPOINTS.spotify_set_volume,
+            params: {
+                volume_percent: req.query.volume
+            },
+            headers: {
+                'Authorization': 'Bearer ' + req.cookies.access_token
+            }
+        }).then(response => {
+            console.log(new Date() + ': Changed Volume to ' + response.config.params.volume_percent +'% - Status: ' + response.status)
+            res.header('Access-Control-Allow-Credentials', true)
+            res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+            res.sendStatus(response.status)
+        }).catch(err => {
+            console.log(err)
+        })
+    })
+
     app.get('/userProfile', function(req,res) {
         axios({
             method: 'GET',
