@@ -6,26 +6,94 @@
     padding-top: 0px;
 }
 
-img.albumImage { 
-    height: 225px;
-    position: relative;
-    display: inline-block;
+.ppButton {
+    content: url(../content/images/pause-play-button.png);
+    background: none;
+    border: none;
+    position: absolute;
     margin-left: auto;
     margin-right: auto;
+    margin-top: auto;
+    opacity: 0;
+    height: 100px;
+    width: 100px;
+}
+
+img.ppButton {
+    left:0;
+    top:0;
+    width: 100px;
+    height: 100px;
+}
+
+.ppButton:active { 
+    outline: none;
+    background-color: none;
+    color: none;
+    transform: scale(.9);
+}
+
+.ppButton:focus {
+    outline: none;
+    background-color: none;
+    background: transparent;
+}
+.albumImage { 
+    height: 225px;
+    position: absolute;
+    display: inline-block;
     border: 5px solid black;
+}
+
+.albumWrapper {
+    height: 225px;
+    width: 225px;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.albumWrapper:after {
+    content: '\A';
+    position: absolute;
+    width: 225px; 
+    height: 225px;
+    top: 0;
+    left: 0;
+    background:rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: all .5s;
+    -webkit-transition: all .5s;
+}
+
+.albumWrapper:hover:after{
+    opacity: 1;
+}
+
+.albumWrapper:hover .ppButton { 
+    opacity: 1;
+    z-index: 1;
+    transition: all .5s;
 }
 
 .songInfo {
     font-size: 32px;
-    padding: 10px;
+    margin-block-start: none;
+    margin-block-end: 0;
+    margin-top: 25px;
+    margin-left: 50px;
+    margin-right: 50px;
     color: black;
 }
 
 .nextSongButton {
     position: absolute;
-    top: 30%;
-    margin-inline-start: 8px;
-    display: inline-block;
+    float: right;
+    top: 32%;
+    left: 73%;
     background-color: rgba(0,0,0,0);
     border: none;
     background: transparent;
@@ -34,6 +102,7 @@ img.albumImage {
 .nextSongButton:disabled {
    color: rgba(0,0,0,0);
 }
+
 .nextSongButton:active { 
     outline: none;
     background-color: none;
@@ -55,11 +124,11 @@ img.nextSongButton {
     min-width: 650px;
     background-color:rgba(167, 29, 29, 0.6);
     padding: 2%;
-    text-align: center;
     position: relative;
-    width: 50%;
+    display: block;
+    width: 40%;
     height: 35%;
-    left: 25vw;
+    left: 30vw;
     right: 75vw;
     border: 5px solid #282c34; 
     border-radius: 150px;
@@ -75,6 +144,7 @@ img.nextSongButton {
     background-color: rgba(0,0,0,0.5);
     border-radius: 8px;
     position: absolute;
+    float: left;
     left: 23%;
     top: 12%;
     height: 200px;
@@ -89,11 +159,15 @@ img.volumeIcon {
 }
 
 .sliderAndIcon {
+    position: absolute;
     float: left;
+    top: 9%;
     left: 25%;
-    position: relative;
     height: 250px;
+    width: 30px;
     margin-top: -15px;
+    margin-inline-end: 15px;
+    margin-left: -30px;
 }
 
 .noPlayer {

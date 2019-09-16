@@ -39,9 +39,14 @@ function ActivePlayer(props) {
     return(
         <div>
             <div className='imageAndWidgets'>
-                <img className='albumImage' src={props.player.item.album.images[1].url} alt='Album Cover'/>
+                <div className='albumWrapper'>
+                    <img className='albumImage' src={props.player.item.album.images[1].url} alt='Album Cover'/>
+                    <button className = 'ppButton' onClick={() => nextSong()} ref={nextSongRef}>
+                        <img src={require('../content/images/pause-play-button.png')} className = 'ppButton' alt='pause/play'></img>
+                    </button>
+                </div>
                 <button className = 'nextSongButton' onClick={() => nextSong()} ref={nextSongRef}>
-                    <img src={require('../content/images/skip.png')} className='nextSongButton' alt='arrow'></img>
+                    <img src={require('../content/images/skip-fill.png')} className='nextSongButton' alt='arrow'></img>
                 </button>
                 <div className='sliderAndIcon'>
                     <img src={require('../content/images/volume.png')} className='volumeIcon' alt=''></img>

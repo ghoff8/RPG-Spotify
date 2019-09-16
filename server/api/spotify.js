@@ -30,7 +30,7 @@ module.exports = (app) => {
         })
     })
 
-    app.post('/nextSong', function(req,res,next) {
+    app.post('/nextSong', function(req,res) {
         axios({
             method: 'POST',
             url: ENDPOINTS.spotify_next_song,
