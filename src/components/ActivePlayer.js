@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import axios from 'axios'
 import Proptypes from 'prop-types'
 import Slider from 'rc-slider'
@@ -13,6 +13,15 @@ ActivePlayer.propTypes = {
 
 function ActivePlayer(props) {
     const nextSongRef = useRef(null)
+    const ppRef = useRef(null)
+    const [waitForUpdate, setWaitForUpdate] = useState(false)
+
+    useEffect(() => {
+        if(waitForUpdate){
+            setWaitForUpdate(false)
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.player.is_playing])
 
     const nextSong = () => {
         nextSongRef.current.disabled = true
@@ -30,10 +39,30 @@ function ActivePlayer(props) {
         axios({
             method: 'POST',
             url: 'http://localhost:3001/setVolume?volume=' + value
-        }).then(res => {
         }).catch(err => {
             console.log(err)
         })
+    }
+
+    function changePlayback(){
+        setWaitForUpdate(true)
+        ppRef.current.content = "../content/images/pause-play-button-greyed.png"
+        if (props.player.is_playing) {
+            axios({
+                method: 'POST',
+                url: 'http://localhost:3001/pause'
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+        else {
+            axios({
+                method: 'POST',
+                url: 'http://localhost:3001/resume'
+            }).catch(err => {
+                console.log(err)
+            })
+        }
     }
 
     return(
@@ -41,8 +70,8 @@ function ActivePlayer(props) {
             <div className='imageAndWidgets'>
                 <div className='albumWrapper'>
                     <img className='albumImage' src={props.player.item.album.images[1].url} alt='Album Cover'/>
-                    <button className = 'ppButton' onClick={() => nextSong()} ref={nextSongRef}>
-                        <img src={require('../content/images/pause-play-button.png')} className = 'ppButton' alt='pause/play'></img>
+                    <button className = 'ppButton' onClick={() => changePlayback()} disabled={waitForUpdate} ref={ppRef}>
+                        <img className = 'ppButton' alt='pause/play'></img>
                     </button>
                 </div>
                 <button className = 'nextSongButton' onClick={() => nextSong()} ref={nextSongRef}>
@@ -62,6 +91,7 @@ function ActivePlayer(props) {
 
 function propDiff(prevProps, nextProps){
     return ((prevProps.player.item.name === nextProps.player.item.name) &&
-        (prevProps.player.device.volume_percent === nextProps.player.device.volume_percent))
+        (prevProps.player.device.volume_percent === nextProps.player.device.volume_percent) &&
+        (prevProps.player.is_playing === nextProps.player.is_playing))
 }
 export default React.memo(ActivePlayer, propDiff)

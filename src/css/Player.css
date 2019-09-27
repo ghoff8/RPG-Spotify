@@ -38,6 +38,12 @@ img.ppButton {
     background-color: none;
     background: transparent;
 }
+
+.ppButton:disabled  { 
+    opacity: 0.3 !important;
+    transform: none !important;
+}
+
 .albumImage { 
     height: 225px;
     position: absolute;
@@ -92,7 +98,7 @@ img.ppButton {
 .nextSongButton {
     position: absolute;
     float: right;
-    top: 32%;
+    top: 34%;
     left: 73%;
     background-color: rgba(0,0,0,0);
     border: none;

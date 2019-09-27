@@ -1,7 +1,6 @@
 const ENDPOINTS = require('../service/constants.js')
 const axios = require('axios')
 const querystring = require('querystring')
-var cors = require('cors')
 let redirect_uri = 
     process.env.REDIRECT_URI || 
         'http://localhost:' + process.env.EXPRESS_PORT + '/callback'
@@ -46,6 +45,7 @@ module.exports = (app) => {
             console.log(err)
         })
     })
+
     app.post('/setVolume', function(req,res) {
         axios({
             method: 'PUT',
@@ -66,6 +66,40 @@ module.exports = (app) => {
         })
     })
 
+    app.post('/resume', function(req,res){
+        axios({
+            method: 'PUT',
+            url: ENDPOINTS.spotify_resume_playback,
+            headers: {
+                'Authorization': 'Bearer ' + req.cookies.access_token
+            }
+        }).then(response => {
+            console.log(new Date() + ': Resumed Current Song - Status: ' + response.status)
+            res.header('Access-Control-Allow-Credentials', true)
+            res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+            res.send(response.data)
+        }).catch(error => {
+            console.log(error)
+        })
+    })
+
+    app.post('/pause', function(req,res){
+        axios({
+            method: 'PUT',
+            url: ENDPOINTS.spotify_pause_playback,
+            headers: {
+                'Authorization': 'Bearer ' + req.cookies.access_token
+            }
+        }).then(response => {
+            console.log(new Date() + ': Paused Current Song - Status: ' + response.status)
+            res.header('Access-Control-Allow-Credentials', true)
+            res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+            res.send(response.data)
+        }).catch(error => {
+            console.log(error)
+        })
+    })
+
     app.get('/userProfile', function(req,res) {
         axios({
             method: 'GET',
@@ -81,8 +115,8 @@ module.exports = (app) => {
         }).catch(error => {
             console.log(error)
         })
-
     })
+
     app.get('/player', function(req,res) {
         axios({
             method: 'GET',
