@@ -1,9 +1,11 @@
 
 .basePlayer { 
     position: relative;
+    display: flex;
     text-align-last: center;
-    height: 35%;
-    padding-top: 0px;
+    min-height: 45%;
+    align-content: center;
+    justify-content: center;
 }
 
 .ppButton {
@@ -93,6 +95,7 @@ img.ppButton {
     margin-left: 50px;
     margin-right: 50px;
     color: black;
+    text-align: center;
 }
 
 .nextSongButton {
@@ -127,15 +130,14 @@ img.nextSongButton {
 }
 
 .imageAndWidgets{
-    min-width: 650px;
+    min-width: 500px;
+    max-width: 650px;
     background-color:rgba(167, 29, 29, 0.6);
     padding: 2%;
     position: relative;
     display: block;
     width: 40%;
-    height: 35%;
-    left: 30vw;
-    right: 75vw;
+    height: 100%;
     border: 5px solid #282c34; 
     border-radius: 150px;
     border-top-right-radius: 0px;

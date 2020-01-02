@@ -22,7 +22,7 @@ module.exports = (app) => {
                 refresh_token: req.query.refresh_token
             }
         }).then(response => {
-            console.log(new Date() + ': Requested Spotify token refresh - Status: ' + response.status)
+            console.log(new Date() + ': Requested Spotify Token Refresh - Status: ' + response.status)
             res.send(response.data)
         }).catch(err => {
             console.log(err)
@@ -126,9 +126,35 @@ module.exports = (app) => {
             }
         }).then(response => {
             console.log(new Date() + ': Requested Spotify Player Info - Status: ' + response.status)
-            res.header('Access-Control-Allow-Credentials', true)
-            res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
-            res.send(response.data)
+            if (response.status === 403) {
+                axios({
+                    method: 'POST',
+                    url: 'http://localhost:3001/apiRefresh?refresh_token=' + req.cookies.refresh_token
+                }).then(secRes => {
+                    res.cookie('access_token', secRes.data.access_token, {maxAge: 3600000})
+                    res.cookie('refresh_token', req.cookies.refresh_token)
+                    axios({
+                        method: 'GET',
+                        url: ENDPOINTS.spotify_get_player,
+                        headers: {
+                            'Authorization': 'Bearer ' + secRes.data.access_token
+                        }
+                    }).then(thirdRes => {
+                        res.header('Access-Control-Allow-Credentials', true)
+                        res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+                        res.send(thirdRes.data)
+                    }).catch(err => {
+                        console.log(err.data)
+                    })
+                }).catch(err => {
+                    console.log(err.data)
+                })
+            }
+            else {
+                res.header('Access-Control-Allow-Credentials', true)
+                res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+                res.send(response.data)
+            }
         }).catch(err => {
             console.log(err.data)
         })

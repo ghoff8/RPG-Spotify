@@ -47,13 +47,16 @@ function App() {
       <body className='App-body'>
       {!Cookies.get('access_token')
         ? <LoginButton/>
-        : <Player
-            access_token={Cookies.get('access_token')}
-          />
+        : <div style={{ width: "100%", height: "100%"}}>
+            <Player
+              access_token={Cookies.get('access_token')}
+            />
+            <div style={{ width: "100%", position: "relative"}}></div>
+          </div>
       }
       </body>
       <footer className='App-footer'>
-        Github: https://github.com/ghoff8/DnD-Spotify
+        Github: https://github.com/ghoff8/RPG-Spotify
       </footer>
     </div>
   );

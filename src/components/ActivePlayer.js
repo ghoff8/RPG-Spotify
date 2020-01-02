@@ -66,25 +66,23 @@ function ActivePlayer(props) {
     }
 
     return(
-        <div>
-            <div className='imageAndWidgets'>
-                <div className='albumWrapper'>
-                    <img className='albumImage' src={props.player.item.album.images[1].url} alt='Album Cover'/>
-                    <button className = 'ppButton' onClick={() => changePlayback()} disabled={waitForUpdate} ref={ppRef}>
-                        <img className = 'ppButton' alt='pause/play'></img>
-                    </button>
-                </div>
-                <button className = 'nextSongButton' onClick={() => nextSong()} ref={nextSongRef}>
-                    <img src={require('../content/images/skip-fill.png')} className='nextSongButton' alt='arrow'></img>
+        <div className='imageAndWidgets'>
+            <div className='albumWrapper'>
+                <img className='albumImage' src={props.player.item.album.images[1].url} alt='Album Cover'/>
+                <button className = 'ppButton' onClick={() => changePlayback()} disabled={waitForUpdate} ref={ppRef}>
+                    <img className = 'ppButton' alt='pause/play'></img>
                 </button>
-                <div className='sliderAndIcon'>
-                    <img src={require('../content/images/volume.png')} className='volumeIcon' alt=''></img>
-                    <div className = 'volumeSlider' key={props.player.device.volume_percent}>
-                        <Slider min={0} max={100} vertical defaultValue={props.player.device.volume_percent} onAfterChange={sliderChange}/>
-                    </div>
-                </div>
-                <h3 className = 'songInfo'>{props.player.item.artists[0].name} - {props.player.item.name} </h3>
             </div>
+            <button className = 'nextSongButton' onClick={() => nextSong()} ref={nextSongRef}>
+                <img src={require('../content/images/skip-fill.png')} className='nextSongButton' alt='arrow'></img>
+            </button>
+            <div className='sliderAndIcon'>
+                <img src={require('../content/images/volume.png')} className='volumeIcon' alt=''></img>
+                <div className = 'volumeSlider' key={props.player.device.volume_percent}>
+                    <Slider min={0} max={100} vertical defaultValue={props.player.device.volume_percent} onAfterChange={sliderChange}/>
+                </div>
+            </div>
+            <h3 className = 'songInfo'>{props.player.item.artists[0].name} - {props.player.item.name} </h3>
         </div>
     )
 }
