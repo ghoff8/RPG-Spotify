@@ -8,6 +8,7 @@ let redirect_uri =
 module.exports = (app) => {
    
     app.post('/apiRefresh', function(req,res) {
+        
         axios({
             method: 'POST',
             url: ENDPOINTS.spotify_token,
@@ -126,7 +127,8 @@ module.exports = (app) => {
             }
         }).then(response => {
             console.log(new Date() + ': Requested Spotify Player Info - Status: ' + response.status)
-            if (response.status === 403) {
+            console.log(response);
+            if (response.status === 401) {
                 axios({
                     method: 'POST',
                     url: 'http://localhost:3001/apiRefresh?refresh_token=' + req.cookies.refresh_token
@@ -199,13 +201,13 @@ module.exports = (app) => {
 }
  
 //refresh logic
- /*axios({
-                method: 'POST',
-                url: 'http://localhost:3001/apiRefresh?refresh_token=' + response.data.refresh_token
-            }).then(secRes => {
-                res.cookie('access_token', secRes.data.access_token, {maxAge: 3600000})
-                res.cookie('refresh_token', response.data.refresh_token)
-                res.redirect(302, 'http://localhost:3000')
-            }).catch(err => {
-                console.log(err.data)
-            })*/
+/*axios({
+    method: 'POST',
+    url: 'http://localhost:3001/apiRefresh?refresh_token=' + response.data.refresh_token
+}).then(secRes => {
+    res.cookie('access_token', secRes.data.access_token, {maxAge: 3600000})
+    res.cookie('refresh_token', response.data.refresh_token)
+    res.redirect(302, 'http://localhost:3000')
+}).catch(err => {
+    console.log(err.data)
+})*/

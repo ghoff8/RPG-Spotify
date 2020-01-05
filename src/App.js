@@ -47,12 +47,10 @@ function App() {
       <body className='App-body'>
       {!Cookies.get('access_token')
         ? <LoginButton/>
-        : <div style={{ width: "100%", height: "100%"}}>
-            <Player
-              access_token={Cookies.get('access_token')}
-            />
+        : <>
+            <Player/>
             <div style={{ width: "100%", position: "relative"}}></div>
-          </div>
+          </>
       }
       </body>
       <footer className='App-footer'>
