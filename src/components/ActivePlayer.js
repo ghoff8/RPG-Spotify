@@ -20,7 +20,6 @@ function ActivePlayer(props) {
         if(waitForUpdate){
             setWaitForUpdate(false)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.player.is_playing])
 
     const nextSong = () => {
@@ -82,7 +81,7 @@ function ActivePlayer(props) {
                     <Slider min={0} max={100} vertical defaultValue={props.player.device.volume_percent} onAfterChange={sliderChange}/>
                 </div>
             </div>
-            <h3 className = 'songInfo'>{props.player.item.artists[0].name} - {props.player.item.name} </h3>
+            <h3 className = 'songInfo'>{props.player.item.name} - {props.player.item.artists[0].name} </h3>
         </div>
     )
 }

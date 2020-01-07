@@ -28,11 +28,13 @@
   color: #61dafb;
 }
 .App-body {
+  display: flex;
   min-height: 91vh;
   background-color: #a84832;
   background-image: url('./content/images/parchment.jpg');
   background-size: cover;
   background-position: center;
+  overflow: hidden;
 }
 .loginNotice {
   background-color: #1DB954;

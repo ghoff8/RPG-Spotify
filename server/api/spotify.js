@@ -8,7 +8,6 @@ let redirect_uri =
 module.exports = (app) => {
    
     app.post('/apiRefresh', function(req,res) {
-        
         axios({
             method: 'POST',
             url: ENDPOINTS.spotify_token,
@@ -126,9 +125,9 @@ module.exports = (app) => {
                 'Authorization': 'Bearer ' + req.cookies.access_token
             }
         }).then(response => {
-            console.log(new Date() + ': Requested Spotify Player Info - Status: ' + response.status)
-            console.log(response);
-            if (response.status === 401) {
+            console.log(new Date() + ': Requested Spotify Player Info - Status: ' + response.status);
+            // TODO: refine circumstance to determine when to refresh token 
+            if (response === undefined) {
                 axios({
                     method: 'POST',
                     url: 'http://localhost:3001/apiRefresh?refresh_token=' + req.cookies.refresh_token

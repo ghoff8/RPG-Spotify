@@ -2,10 +2,16 @@
 .basePlayer { 
     position: relative;
     display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
     text-align-last: center;
-    height: 100%;
-    width: 50%;
+    height: 91vh;
+    min-width:550px;
+    width: 100%;
     margin: auto;
+    background-color: rgba(0,0,0,.5);
+    border-left: 3px solid #282c34;
+    border-right: 3px solid #282c34;
     align-content: center;
     justify-content: center;
 }
@@ -90,14 +96,19 @@ img.ppButton {
 }
 
 .songInfo {
-    font-size: 200%;
+    display: block;
+    font-size: 195%;
     font-weight: 500;
     margin-block-start: none;
     margin-top: 25px;
-    margin-left: 60px;
-    margin-right: 60px;
+    margin-left: 40px;
+    margin-right: 40px;
     color: black;
     text-align: center;
+    text-overflow: ellipsis;
+    overflow-y: auto;
+    height: 2em;
+    line-height: .95em;
 }
 
 .nextSongButton {
@@ -134,7 +145,7 @@ img.nextSongButton {
 .imageAndWidgets{
     min-width: 500px;
     max-width: 55%;
-    min-height: 250px;
+    margin: 0 auto;
     height: fit-content;
     background-color:rgba(167, 29, 29, 0.6);
     padding: 2%;

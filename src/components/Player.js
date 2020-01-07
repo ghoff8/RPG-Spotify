@@ -58,7 +58,10 @@ function Player(props) {
         <div className='basePlayer'>
             { 
               player !== ''
-                ? <ActivePlayer player={player}/>
+                ? <>
+                    <ActivePlayer player={player}/>
+                    <div style={{width:"100%", height: "100%"}}></div>
+                  </>
                 : <div className='noPlayer'><h1>No Player Active</h1></div>
             } 
         </div>

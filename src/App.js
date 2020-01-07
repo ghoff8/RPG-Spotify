@@ -46,10 +46,15 @@ function App() {
       </header>
       <body className='App-body'>
       {!Cookies.get('access_token')
-        ? <LoginButton/>
+        ? <>
+            <div style={{width: "100%"}}/>
+            <LoginButton/>
+            <div style={{width: "100%"}}/>
+          </>
         : <>
+            <div style={{width: "100%"}}/>
             <Player/>
-            <div style={{ width: "100%", position: "relative"}}></div>
+            <div style={{width: "100%"}}/>
           </>
       }
       </body>
