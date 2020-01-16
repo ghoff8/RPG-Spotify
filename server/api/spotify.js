@@ -1,13 +1,13 @@
 const ENDPOINTS = require('../service/constants.js')
 const axios = require('axios')
 const querystring = require('querystring')
-let redirect_uri = 
+const REDIRECT_URI = 
     process.env.REDIRECT_URI || 
         'http://localhost:' + process.env.EXPRESS_PORT + '/callback'
 
 module.exports = (app) => {
    
-    app.post('/apiRefresh', function(req,res) {
+    app.post('/api-refresh', function(req,res) {
         axios({
             method: 'POST',
             url: ENDPOINTS.spotify_token,
@@ -25,11 +25,11 @@ module.exports = (app) => {
             console.log(new Date() + ': Requested Spotify Token Refresh - Status: ' + response.status)
             res.send(response.data)
         }).catch(err => {
-            console.log(err)
+            console.error(err.data)
         })
     })
 
-    app.post('/nextSong', function(req,res) {
+    app.post('/next-song', function(req,res) {
         axios({
             method: 'POST',
             url: ENDPOINTS.spotify_next_song,
@@ -38,15 +38,13 @@ module.exports = (app) => {
             }
         }).then(response => {
             console.log(new Date() + ': Requested Next Song - Status: ' + response.status)
-            res.header('Access-Control-Allow-Credentials', true)
-            res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
             res.sendStatus(response.status)
         }).catch(err => {
-            console.log(err)
+            console.error(err.data)
         })
     })
 
-    app.post('/setVolume', function(req,res) {
+    app.post('/set-volume', function(req,res) {
         axios({
             method: 'PUT',
             url: ENDPOINTS.spotify_set_volume,
@@ -58,11 +56,9 @@ module.exports = (app) => {
             }
         }).then(response => {
             console.log(new Date() + ': Changed Volume to ' + response.config.params.volume_percent +'% - Status: ' + response.status)
-            res.header('Access-Control-Allow-Credentials', true)
-            res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
             res.sendStatus(response.status)
         }).catch(err => {
-            console.log(err)
+            console.error(err.data)
         })
     })
 
@@ -75,11 +71,9 @@ module.exports = (app) => {
             }
         }).then(response => {
             console.log(new Date() + ': Resumed Current Song - Status: ' + response.status)
-            res.header('Access-Control-Allow-Credentials', true)
-            res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
             res.send(response.data)
-        }).catch(error => {
-            console.log(error)
+        }).catch(err => {
+            console.error(err.dat)
         })
     })
 
@@ -92,28 +86,24 @@ module.exports = (app) => {
             }
         }).then(response => {
             console.log(new Date() + ': Paused Current Song - Status: ' + response.status)
-            res.header('Access-Control-Allow-Credentials', true)
-            res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
             res.send(response.data)
-        }).catch(error => {
-            console.log(error)
+        }).catch(err => {
+            console.error(err.data)
         })
     })
 
-    app.get('/userProfile', function(req,res) {
+    app.get('/user-profile', function(req,res) {
         axios({
             method: 'GET',
-            url: ENDPOINTS.spotify_get_user,
+            url: ENDPOINTS.spotify_get_me,
             headers: {
                 'Authorization': 'Bearer ' + req.cookies.access_token
             }
         }).then(response => {
             console.log(new Date() + ': Requested User Profile - Status: ' + response.status)
-            res.header('Access-Control-Allow-Credentials', true)
-            res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
             res.send(response.data)
-        }).catch(error => {
-            console.log(error)
+        }).catch(err => {
+            console.error(err.data)
         })
     })
 
@@ -125,7 +115,9 @@ module.exports = (app) => {
                 'Authorization': 'Bearer ' + req.cookies.access_token
             }
         }).then(response => {
-            console.log(new Date() + ': Requested Spotify Player Info - Status: ' + response.status);
+            if (response) {
+                console.log(new Date() + ': Requested Spotify Player Info - Status: ' + response.status);
+            }
             // TODO: refine circumstance to determine when to refresh token 
             if (response === undefined) {
                 axios({
@@ -141,23 +133,65 @@ module.exports = (app) => {
                             'Authorization': 'Bearer ' + secRes.data.access_token
                         }
                     }).then(thirdRes => {
-                        res.header('Access-Control-Allow-Credentials', true)
-                        res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
                         res.send(thirdRes.data)
                     }).catch(err => {
-                        console.log(err.data)
+                        console.err(err.data)
                     })
                 }).catch(err => {
-                    console.log(err.data)
+                    console.error(err.data)
                 })
             }
             else {
-                res.header('Access-Control-Allow-Credentials', true)
-                res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
                 res.send(response.data)
             }
         }).catch(err => {
             console.log(err.data)
+        })
+    })
+
+    app.get('/fetch-playlists', async function(req,res) {
+        async function requestPlaylistChunk(offset) {
+            let results = axios({
+                method: 'GET',
+                url: ENDPOINTS.spotify_get_user + "/bezoing/playlists",
+                params: {
+                    limit: 50,
+                    offset: offset
+                },
+                headers: {
+                    'Authorization': 'Bearer ' + req.cookies.access_token
+                },
+            }).then(response => {
+                return response.data;
+            }).catch(err => {
+                console.err(err.data)
+            })
+            return results;
+        }
+        let playlists = [];
+        let offset = 0;
+        let dataChunk = await requestPlaylistChunk(offset);
+        playlists.push(...dataChunk.items);
+        while (dataChunk.next !== null) {
+            offset += 50;
+            dataChunk = await requestPlaylistChunk(offset);
+            playlists.push(...dataChunk.items);
+        }
+        res.send(playlists);
+    })
+
+    app.get('/playlist', function(req,res) {
+        axios({
+            method: 'GET',
+            url: ENDPOINTS.spotify_get_playlist,
+            params: {
+                playlist_id: req.query.playlist_id
+            },
+            headers: {
+                'Authorization': 'Bearer ' + req.cookies.access_token
+            }
+        }).then(response => {
+            console.log(response.data);
         })
     })
 
@@ -167,7 +201,7 @@ module.exports = (app) => {
                 response_type: 'code',
                 client_id: process.env.SPOTIFY_CLIENT_ID,
                 scope: 'user-read-private user-read-email user-modify-playback-state user-read-currently-playing user-read-playback-state user-library-read',
-                redirect_uri
+                redirect_uri: REDIRECT_URI
             }))
     })
 
@@ -185,7 +219,7 @@ module.exports = (app) => {
             params: {
                 grant_type: 'authorization_code',
                 code: code,
-                redirect_uri: redirect_uri,
+                redirect_uri: REDIRECT_URI
             },
             timeout: 5000
         }).then(response =>{
@@ -193,8 +227,8 @@ module.exports = (app) => {
             res.cookie('access_token', response.data.access_token, {maxAge: 3600000, signed: false})
             res.cookie('refresh_token', response.data.refresh_token)
             res.redirect(302, 'http://localhost:3000')
-        }).catch(error => {
-            console.log(error)
+        }).catch(err => {
+            console.error(err)
         })
     })
 }

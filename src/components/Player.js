@@ -60,7 +60,18 @@ function Player(props) {
               player !== ''
                 ? <>
                     <ActivePlayer player={player}/>
-                    <div style={{width:"100%", height: "100%"}}></div>
+                    <div style={{width:"100%", height: "100%"}}>
+                        <button 
+                            onClick={() => {
+                                axios({
+                                    method: 'GET',
+                                    url: 'http://localhost:3001/fetch-playlists'
+                                }).then(response => {
+                                    console.log(response);
+                                })
+                            }}>
+                        </button>
+                    </div>
                   </>
                 : <div className='noPlayer'><h1>No Player Active</h1></div>
             } 

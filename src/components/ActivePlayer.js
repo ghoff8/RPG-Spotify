@@ -26,7 +26,7 @@ function ActivePlayer(props) {
         nextSongRef.current.disabled = true
         axios({
             method: 'POST',
-            url: 'http://localhost:3001/nextSong'
+            url: 'http://localhost:3001/next-song'
         }).then(res => {
             nextSongRef.current.disabled = false
         }).catch(err => {
@@ -37,7 +37,7 @@ function ActivePlayer(props) {
     function sliderChange(value){
         axios({
             method: 'POST',
-            url: 'http://localhost:3001/setVolume?volume=' + value
+            url: 'http://localhost:3001/set-volume?volume=' + value
         }).catch(err => {
             console.log(err)
         })

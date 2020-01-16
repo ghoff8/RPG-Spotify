@@ -4,6 +4,7 @@ import Player from  './components/Player'
 import LoginButton from './components/LoginButton'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import PlaylistList from './components/SideBar'
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
       {
         axios({
           method: 'GET',
-          url: 'http://localhost:3001/userProfile?access_token=' + Cookies.get('access_token'),
+          url: 'http://localhost:3001/user-profile?access_token=' + Cookies.get('access_token'),
         }).then(res => {
           setUserProfile(res.data)
         }).catch(error => {
@@ -52,9 +53,9 @@ function App() {
             <div style={{width: "100%"}}/>
           </>
         : <>
-            <div style={{width: "100%"}}/>
+            <PlaylistList/>
             <Player/>
-            <div style={{width: "100%"}}/>
+            <PlaylistList/>
           </>
       }
       </body>
